@@ -1,6 +1,7 @@
 from doubly_linked_list import DoublyLinkedList
 
 
+
 class RingBuffer:
     def __init__(self, capacity):
         self.capacity = capacity
@@ -8,37 +9,28 @@ class RingBuffer:
         self.storage = DoublyLinkedList()
 
     def append(self, item):
-        if self.storage.length ==  0:
-            self.storage.add_to_head(item)
-            self.current = self.storage.head
-        elif self.capacity > self.storage.length:
-            self.storage.add_to_tail(item)
-            self.current = self.storage
-        elif self.capacity == self.storage.length:
-            node = self.storage.head
-            self.storage.remove_from_head()
-            self.storage.add_to_tail(item)
-            if node == self.current:
+        if self.capacity <= 0:
+            return
+        if len(self.storage) == self.capacity:
+            if not self.current:
                 self.current = self.storage.tail
+            self.current.value = item
+            self.current = self.current.prev
+        else:
+            self.storage.add_to_head(item)
 
     def get(self):
         # Note:  This is the only [] allowed
         list_buffer_contents = []
-        list_buffer_contents.append(self.current)
-        if self.current.next:
-            self.current = self.current.next
-        else:
-            next_node = self.storage.head
-
-        while next_node != node:
-            list_buffer_contents.append(next_node.value)
-            if next_node.next:
-                next_node = next_node.next
-            else:
-                next_node = self.storage.head
-        # TODO: Your code here
-
+        if len(self.storage) <= 0:
+            return list_buffer_contents
+        current = self.storage.tail
+        list_buffer_contents.append(current.value)
+        while current.prev:
+            current = current.prev
+            list_buffer_contents.append(current.value)
         return list_buffer_contents
+        # TODO: Your code here
 
 # ----------------Stretch Goal-------------------
 
